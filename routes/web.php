@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -19,14 +20,11 @@ Route::post('/auth/register', [RegisterController::class, 'store'] )->name('regi
 Route::get('/auth/login', [LoginController::class, 'index'])->name('login');
 Route::post('/auth/login', [LoginController::class, 'store'] )->name('login.store');
 
-
 //--------------------------------------------------------------------------------
 
 Route::get('email/verify/{id}/{hash}', function(EmailVerificationRequest $request){
     $request->fulfill();
-
     return redirect()->route('dashboard')->with('success', 'Tu correo fue verificado Correctamente. Ya puedes administrar tus presupuestos');
-
 })->middleware(['auth', 'signed'])->name('verification.verify');
 
 //--------------------------------------------------------------------------------
@@ -34,6 +32,14 @@ Route::get('email/verify/{id}/{hash}', function(EmailVerificationRequest $reques
 Route::get('email/verify', function(){
     return view('auth.verify-email');
 })->middleware('auth')->name('verification.notice');
+
+//--------------------------------------------------------------------------------
+
+Route::post('/email/verification-notification', function(Request $request){
+    $request->user()->sendEmailVerificationNotification();
+    return back()->with('success', 'Se ha reenviado el correo de verificación');
+})->middleware(['auth', 'throttle:1,1'])->name('verification.send');
+// al usar throttle:1,1 El primer numero es el numero de peticiones y el segundo numero son los minutos para hacer otra peticion
 
 //--------------------------------------------------------------------------------
 
