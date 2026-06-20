@@ -11,6 +11,7 @@
     @endif
 
 <form class="mt-14 space-y-5" novalidate method="POST" action="{{route('login.store')}}">
+    @csrf
     <div class="flex flex-col gap-2">
         <label class="font-bold text-2xl" for="email">Email</label>
 
