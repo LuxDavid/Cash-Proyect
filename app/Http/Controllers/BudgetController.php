@@ -9,7 +9,8 @@ use Illuminate\Routing\Attributes\Controllers\Authorize;
 use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\Support\Facades\Auth;
 
-#[Middleware('auth', only:['index'])]
+// #[Middleware('auth', only:['index'])]
+#[Middleware('auth')]
 #[Middleware('verified')]
 class BudgetController extends Controller
 {
@@ -62,6 +63,8 @@ class BudgetController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
+    
+     #[Authorize('update', 'budget')]
     public function edit(Budget $budget){
         return view('budgets.edit', [
             'budget' => $budget
