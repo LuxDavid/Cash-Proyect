@@ -6,7 +6,6 @@ use App\Models\User;
 use App\Models\Budget;
 use Illuminate\Auth\Access\Response;
 
-
 class BudgetPolicy
 {
     public function view(User $user, Budget $budget) : bool{
