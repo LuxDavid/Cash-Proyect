@@ -17,6 +17,8 @@
             </style>
         @endif
         <script src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1" type="module"></script>
+
+        <meta name="csrf-token" content="{{ csrf_token() }}">
     </head>
 
     <body>
