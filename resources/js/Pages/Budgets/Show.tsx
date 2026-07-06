@@ -1,9 +1,8 @@
 import { Budget } from '../../../types/budget';
-import {Head} from '@inertiajs/react';
+import {Head, usePage} from '@inertiajs/react';
 import AmountDisplay from '../../../components/AmountDisplay';
 import ExpenseModal from '../../../components/ExpenseModal';
 import { useExpenseModalStore } from '@/stores/expense-modal-store';
-import { Onclick } from '../../../../../../Users/PC PRIDE GOAT/Documents/cursos-victor-robles-Web/Curso-react2/01-reforzamiento/src/data/giphy.response';
 import { Category } from '../../../types/category';
 
 type Props = {
@@ -12,6 +11,8 @@ type Props = {
 }
 
 export default function Show({ budget, categories }: Props) {
+
+  const {flash} = usePage().props;
 
   const openCreadeModel= useExpenseModalStore((state) => state.openCreateModal);
   useExpenseModalStore.getState().setBudget(budget);
