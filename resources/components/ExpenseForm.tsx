@@ -1,13 +1,15 @@
 import { useExpenseModalStore } from '@/stores/expense-modal-store'
 import { useForm } from '@inertiajs/react';
 import React from 'react';
+import {route} from 'ziggy-js';
+import InputError from './InputError';
 
 export default function ExpenseForm() {
 
     const budget = useExpenseModalStore(state => state.budget);
     const categories = useExpenseModalStore(state => state.categories);
 
-    const {data, setData} = useForm({
+    const {data, setData, post, errors} = useForm({
         name: '',
         amount:'',
         category:''
@@ -17,6 +19,7 @@ export default function ExpenseForm() {
 
     const submit= (e: React.SubmitEvent<HTMLFormElement>) => {
             e.preventDefault();
+            post(route('expenses.store', budget.id));
     }
 
     return (
@@ -35,6 +38,8 @@ export default function ExpenseForm() {
                     />
                 </div>
 
+                {errors.name && <InputError>{errors.name}</InputError>}
+
                 <div className='space-y-3'>
                     <label htmlFor="amount" className='block text-xl font-bold'>Cantidad Gasto</label>
                     <input
@@ -46,6 +51,8 @@ export default function ExpenseForm() {
                         onChange={e => setData('amount', e.target.value)}
                     />
                 </div>
+
+                {errors.amount && <InputError>{errors.amount}</InputError>}
 
                 {budget?.type === 'general' && (
                     <div className='space-y-3'>
@@ -60,6 +67,8 @@ export default function ExpenseForm() {
                             <option value="">Selecciona Categoría</option>
                             {categories.map(category => <option key={category.value} value={category.value}>{category.label}</option>)}
                         </select>
+
+                         {errors.category && <InputError>{errors.category}</InputError>}
                     </div>
                 )}
 
