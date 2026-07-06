@@ -1,11 +1,12 @@
 import { Budget } from '../../../types/budget';
-import {Head, usePage} from '@inertiajs/react';
+import { Head, usePage } from '@inertiajs/react';
 import AmountDisplay from '../../../components/AmountDisplay';
 import ExpenseModal from '../../../components/ExpenseModal';
 import { useExpenseModalStore } from '@/stores/expense-modal-store';
 import { Category } from '../../../types/category';
 import { toast, ToastContainer } from 'react-toastify';
 import { useEffect } from 'react';
+import { formatDate } from '@/utils';
 
 type Props = {
   budget: Budget
@@ -14,21 +15,21 @@ type Props = {
 
 export default function Show({ budget, categories }: Props) {
 
-  const {flash} = usePage().props;
+  const { flash } = usePage().props;
 
-  const openCreadeModel= useExpenseModalStore((state) => state.openCreateModal);
+  const openCreateModel = useExpenseModalStore((state) => state.openCreateModal);
   useExpenseModalStore.getState().setBudget(budget);
   useExpenseModalStore.getState().setCategories(categories);
 
-  useEffect(()=> {
-      if(flash.success){
-        toast.success(flash.success);
-      }
+  useEffect(() => {
+    if (flash.success) {
+      toast.success(flash.success);
+    }
   }, [flash]);
 
   return (
     <>
-      <Head title={`Presupuesto de ${budget.name}`}/>
+      <Head title={`Presupuesto de ${budget.name}`} />
       <section className="sm:flex sm:items-center mt-10">
         <div className="sm:flex-auto">
           <h1 className="font-bold text-4xl">Presupuesto: {budget.name}</h1>
@@ -44,24 +45,73 @@ export default function Show({ budget, categories }: Props) {
       <main className='grid grid-cols-1 md:grid-cols-2 items-center gap-20 mt-10'>
 
         <div className='space-y-5'>
-              <AmountDisplay label='Presupesto' amount={+budget.amount}/>
-              <AmountDisplay label='Gastado' amount={0}/>
-              <AmountDisplay label='Restante' amount={0}/>
+          <AmountDisplay label='Presupesto' amount={+budget.amount} />
+          <AmountDisplay label='Gastado' amount={0} />
+          <AmountDisplay label='Restante' amount={0} />
         </div>
       </main>
 
       <section className='p-10 lg:px-5 shadow-lg mt-10'>
-            <div className='flex items-center justify-between'>
-                <h2 className='text-3xl font-bold'>Gastos</h2>
+        <div className='flex items-center justify-between'>
+          <h2 className='text-3xl font-bold'>Gastos</h2>
 
-                <button className='bg-purple-950 hover:bg-purple-800 px-5 py-2 my-5 rounded-lg text-white font-bold text-xl cursor-pointer' onClick={openCreadeModel}>
-                    Nuevo Gasto
-                </button>
+          <button className='bg-purple-950 hover:bg-purple-800 px-5 py-2 my-5 rounded-lg text-white font-bold text-xl cursor-pointer' onClick={openCreateModel}>
+            Nuevo Gasto
+          </button>
+        </div>
+
+        {budget.expenses.length ? (
+
+        <div className="mt-8 flow-root ">
+          <div className=" ring-1 ring-gray-300 rounded-lg ">
+            <div className="inline-block min-w-full align-middle">
+              <table className="relative min-w-full">
+                <thead>
+                  <tr>
+                    <th scope="col">
+                      <span className="sr-only">Gastos</span>
+                    </th>
+                    <th scope="col">
+                      <span className="sr-only">Acciones</span>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-300 ">
+                  {budget.expenses.map(expense => (
+                    <tr key={expense.id} className='flex justify-between items-center '>
+                    <td className={`pb-5 px-10 relative`}>
+                      <p className={`absolute top-0 left-0 inline-block px-3 py-1 rounded-br-2xl text-sm font-medium w-40`}>
+                        
+                      </p>
+                      <p className="text-xl font-bold text-gray-500">{expense.name}</p>
+                      <p className="text-lg text-gray-500">{expense.amount}</p>
+                      <p className='text-sm text-gray-400'>Agregado el: {formatDate(expense.created_at)}</p>
+                    </td>
+                    <td className="py-6 px-10 flex justify-end gap-3">
+
+                    </td>
+                  </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
+          </div>
+        </div>
+
+        ) : (
+        <p className="text-center text-xl mt-10 ">No Hay Gastos.
+          <button
+            type='button'
+            onClick={openCreateModel}
+            className="text-amber-500"
+          >Comienza creando uno</button>
+        </p>
+      )}
+
       </section>
 
-        <ExpenseModal/>
-        <ToastContainer/>
+      <ExpenseModal />
+      <ToastContainer />
     </>
   )
 }
