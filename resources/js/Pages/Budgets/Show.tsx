@@ -4,6 +4,8 @@ import AmountDisplay from '../../../components/AmountDisplay';
 import ExpenseModal from '../../../components/ExpenseModal';
 import { useExpenseModalStore } from '@/stores/expense-modal-store';
 import { Category } from '../../../types/category';
+import { toast, ToastContainer } from 'react-toastify';
+import { useEffect } from 'react';
 
 type Props = {
   budget: Budget
@@ -17,6 +19,12 @@ export default function Show({ budget, categories }: Props) {
   const openCreadeModel= useExpenseModalStore((state) => state.openCreateModal);
   useExpenseModalStore.getState().setBudget(budget);
   useExpenseModalStore.getState().setCategories(categories);
+
+  useEffect(()=> {
+      if(flash.success){
+        toast.success(flash.success);
+      }
+  }, [flash]);
 
   return (
     <>
@@ -53,6 +61,7 @@ export default function Show({ budget, categories }: Props) {
       </section>
 
         <ExpenseModal/>
+        <ToastContainer/>
     </>
   )
 }
