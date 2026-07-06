@@ -16,7 +16,7 @@ class Expense extends Model
         'category' => ExpenseCategory::class
     ];
 
-    protected $appends= ['category_lavel', 'category_color'];
+    protected $appends= ['category_label', 'category_color'];
 
     public function getCategoryLabelAttribute(){
         return $this->category->label();

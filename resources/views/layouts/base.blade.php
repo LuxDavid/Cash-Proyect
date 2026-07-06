@@ -6,7 +6,9 @@
 
         <title>{{ config('app.name', 'CashTrackr') }} - @yield('title')</title>
 
-        @fonts
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Asar&family=Montserrat+Alternates:wght@300;400;700&family=Outfit:wght@100..900&family=Prata&display=swap" rel="stylesheet">
 
         <!-- Styles / Scripts -->
         @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
@@ -27,7 +29,7 @@
         <div class="max-w-6xl mx-auto flex flex-col lg:flex-row items-center lg:justify-between">
 
             <div class="w-full max-w-100">
-                <img src="{{ asset('img/logo.svg') }}" title="CashTrack logo" alt="CashTrack logo" class="w-fullblock"/>
+                    <img src="{{ asset('img/logo.svg') }}" title="CashTrack logo" alt="CashTrack logo" class="w-fullblock"/>
             </div>
 
             <nav class="flex flex-col lg:flex-row items-center gap-4">

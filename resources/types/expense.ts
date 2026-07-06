@@ -17,4 +17,6 @@ export type Expense = {
     amount: string
     created_at: string
     category: CategoryValue
+    category_label: string
+    category_color: string
 }
