@@ -8,7 +8,11 @@ use App\Models\Expense;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Attributes\Controllers\Authorize;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 
+
+#[Middleware('auth')]
+#[Middleware('verified')]
 class ExpenseController extends Controller
 {
 
