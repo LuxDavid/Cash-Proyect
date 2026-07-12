@@ -59,7 +59,7 @@ test('Assigns the created budget to the authenticated user', function(){
     expect($budget->user_id)->toBe($user->id);
 });
 
-test('Creates a budget and redirect with succes mmesage', function(){
+test('Creates a budget and redirect with success mesage', function(){
 
     $user= User::factory()->create([
         'email_verified_at' => now()
@@ -71,7 +71,9 @@ test('Creates a budget and redirect with succes mmesage', function(){
         'type' => 'goal'
     ]);
 
-    $response->assertRedirect(route('dashboard'));
+    $budget = Budget::first();
+
+    $response->assertRedirect(route('budgets.show', $budget));
     $response->assertSessionHas('success', 'Presupuesto creado correctamente');
 
 });
