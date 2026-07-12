@@ -10,8 +10,7 @@ use Illuminate\Http\Request;
 class ExpenseController extends Controller
 {
 
-    public function store(ExpenseRequest $request, Budget $budget)
-    {
+    public function store(ExpenseRequest $request, Budget $budget){
         // $data = $request->validated();
 
         // Expense::create([
@@ -27,9 +26,12 @@ class ExpenseController extends Controller
                     ->with('success', 'Gasto Registrado correctamente');
     }
 
-    public function update(Request $request, Expense $expense)
+    public function update(ExpenseRequest $request, Budget $budget, Expense $expense)
     {
-        //
+        $expense->update($request->validated());
+        return redirect()->route('budgets.show', $budget)
+                    ->with('success', 'Gasto Actualizado correctamente');
+
     }
 
     public function destroy(Expense $expense)
