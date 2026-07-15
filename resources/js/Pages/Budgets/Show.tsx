@@ -10,6 +10,7 @@ import { formatDate } from '@/utils';
 import ProgressBar from '../../../components/ProgressBar';
 import ExpenseDropdown from '../../../components/ExpenseDropdown';
 import DeleteExpenseModal from '../../../components/DeleteExpenseModal';
+import CashTrackrAgent from '../../../components/CashTrackrAgent';
 
 type Props = {
   budget: Budget
@@ -19,7 +20,7 @@ type Props = {
 
 export default function Show({ budget, categories, spent }: Props) {
 
-  const { flash } = usePage().props;
+  const { flash, user } = usePage().props;
 
   useEffect(() => {
     if (flash.success) {
@@ -30,12 +31,12 @@ export default function Show({ budget, categories, spent }: Props) {
   const openCreateModel = useExpenseModalStore((state) => state.openCreateModal);
 
   const remaining = +budget.amount - +spent
-  const percentageUsed=(+spent / +budget.amount )* 100;
+  const percentageUsed=((+spent / +budget.amount )* 100).toFixed(2);
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      setProgress(percentageUsed)
+      setProgress(+percentageUsed)
     }, 100);
 
     return () => clearTimeout(timeout);
@@ -131,6 +132,8 @@ export default function Show({ budget, categories, spent }: Props) {
       )}
 
       </section>
+
+      <CashTrackrAgent budgetId={budget.id} name={user.name}/>
 
       <ExpenseModal />
       <DeleteExpenseModal/>
