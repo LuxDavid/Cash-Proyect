@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useChat } from '@ai-sdk/react';
 import { DefaultChatTransport } from 'ai';
 import { toast } from 'react-toastify';
@@ -9,11 +9,12 @@ type Props = {
     name: string
 }
 
-
 export default function CashTrackrAgent({budgetId, name}: Props) {
 
     const [input, setInput] = useState('');
-    const{sendMessage, messages} = useChat({
+    const fileInputRef= useRef<HTMLInputElement>(null);
+
+    const{sendMessage, messages, setMessages} = useChat({
         transport: new DefaultChatTransport({
             api: `/dashboard/budgets/${budgetId}/chat`
         }),
@@ -35,7 +36,66 @@ export default function CashTrackrAgent({budgetId, name}: Props) {
         }
     });
 
-    console.log(messages);
+    const handleImageUpload= async(e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if(!file) return
+
+        setMessages(prev => [
+            ...prev,
+            {
+                id: crypto.randomUUID(),
+                role: 'user' as const,
+                content: 'Ticket de Compra Subido',
+                parts:[{type:'text' as const, text: 'Ticket de compra subido'}]
+            }
+        ])
+
+        try {
+            const csrfToken = document.querySelector<HTMLMetaElement>('meta[name="csrf-token"]')?.content ?? '';
+            const formData= new FormData()
+            formData.append('image', file);
+            
+            const response= await fetch(`/dashboard/budgets/${budgetId}/scan-ticket`,{
+                method:'POST',
+                headers:{
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json'
+                },
+                credentials: 'same-origin',
+                body:formData
+            });
+
+            const data= await response.json();
+            setMessages(prev => [
+                ...prev,
+                {
+                    id:crypto.randomUUID(),
+                    role: 'assistant' as const,
+                    content:data.message,
+                    parts:[{type:'text' as const, text: data.message}]
+                }
+            ])
+
+            if(data.success){
+                toast.success('Gastos del ticket Registrados')
+                router.reload()
+            }
+
+        } catch (error) {
+            console.error('Error al procesar el Ticket: ', error);
+             setMessages(prev => [
+            ...prev,
+            {
+                id: crypto.randomUUID(),
+                role: 'assistant' as const,
+                content: 'Error al procesar el ticket. Intenta de Nuevo',
+                parts:[{type:'text' as const, text: 'Error al procesar el ticket. Intenta de Nuevo'}]
+            }
+        ])
+        } finally{
+            if(fileInputRef.current) fileInputRef.current.value=''
+        }
+    }
     
 
     return (
@@ -51,13 +111,13 @@ export default function CashTrackrAgent({budgetId, name}: Props) {
                         {m.parts.map((part, i) => {
                             if(part.type !== 'text') return null
 
-                            const text= part.text.replace('[]', '[EXPNESE_CREATED]').trim();
+                            const text= part.text.replace('[]', '[EXPENSE_CREATED]').trim();
 
                             if(!text) return null
 
                             return (
                                 <p key={i} className='text-xl'>
-                                    <strong>{m.role === 'user' ? name : 'Cashtrackr IA'}</strong>{' '}    
+                                    <strong>{m.role === 'user' ? name : 'CashTrackr IA'}</strong>{' '}    
                                     {text}
                                 </p>
                             )
@@ -91,7 +151,7 @@ export default function CashTrackrAgent({budgetId, name}: Props) {
                     </button>
                     <button
                         type="button"
-                        onClick={() => {} }
+                        onClick={() => fileInputRef.current?.click() }
                         className="mt-5 bg-amber-500 hover:bg-amber-500 p-3 rounded-lg text-white font-bold text-xl cursor-pointer disabled:opacity-20"
                     >
                         Subir Ticket
@@ -101,6 +161,8 @@ export default function CashTrackrAgent({budgetId, name}: Props) {
                     type="file"
                     accept="image/*"
                     className="hidden"
+                    ref={fileInputRef}
+                    onChange={handleImageUpload}
                 />
             </form>
         </section>
