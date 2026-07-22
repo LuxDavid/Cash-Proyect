@@ -35,7 +35,7 @@ class BudgetChatController extends Controller
 
         return $agent
                 ->stream($prompt, provider:'openrouter', 
-                model:'poolside/laguna-m.1:free')
+                model:'openrouter/free')
                 ->usingVercelDataProtocol();
     }
 
