@@ -7,13 +7,7 @@ use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
 {
-    /**
-     * The root template that's loaded on the first page visit.
-     *
-     * @see https://inertiajs.com/server-side-setup#root-template
-     *
-     * @var string
-     */
+    
     protected $rootView = 'layouts.inertia';
 
     /**
@@ -35,12 +29,18 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+         $user = $request->user();
+         $subscribed = $request->user()?->subscribed('default') ?? false;
+
         return [
             ...parent::share($request),
             'flash' => [
                 'success' => fn() => $request->session()->get('success')
             ],
-            'user' => $request->user()
+            'user' => [
+                'user' => $user,
+                'subscribed' => $subscribed
+            ]
         ];
     }
 }

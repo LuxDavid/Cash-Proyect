@@ -11,6 +11,7 @@ import ProgressBar from '../../../components/ProgressBar';
 import ExpenseDropdown from '../../../components/ExpenseDropdown';
 import DeleteExpenseModal from '../../../components/DeleteExpenseModal';
 import CashTrackrAgent from '../../../components/CashTrackrAgent';
+import PricingTable from '../../../components/PricingTable';
 
 type Props = {
   budget: Budget
@@ -21,6 +22,9 @@ type Props = {
 export default function Show({ budget, categories, spent }: Props) {
 
   const { flash, user } = usePage().props;
+
+  console.log(user.subscribed);
+  
 
   useEffect(() => {
     if (flash.success) {
@@ -133,7 +137,15 @@ export default function Show({ budget, categories, spent }: Props) {
 
       </section>
 
-      <CashTrackrAgent budgetId={budget.id} name={user.name}/>
+      {user.subscribed ? (
+          <CashTrackrAgent budgetId={budget.id} name={user.name}/>
+      ) : (
+          <div className='mt-10'>
+              <PricingTable/>
+          </div>  
+      )}
+
+      
 
       <ExpenseModal />
       <DeleteExpenseModal/>
