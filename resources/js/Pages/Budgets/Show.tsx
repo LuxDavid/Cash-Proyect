@@ -23,7 +23,7 @@ export default function Show({ budget, categories, spent }: Props) {
 
   const { flash, user } = usePage().props;
 
-  console.log(user.subscribed);
+  console.log(user);
   
 
   useEffect(() => {
@@ -138,7 +138,7 @@ export default function Show({ budget, categories, spent }: Props) {
       </section>
 
       {user.subscribed ? (
-          <CashTrackrAgent budgetId={budget.id} name={user.name}/>
+          <CashTrackrAgent budgetId={budget.id} name={user.user.name}/>
       ) : (
           <div className='mt-10'>
               <PricingTable/>

@@ -17,5 +17,4 @@ class Subscribed
          return $next($request);
     }
 
-   
 }

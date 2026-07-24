@@ -6,10 +6,13 @@ use App\Http\Controllers\BudgetChatController;
 use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\LogoutController;
+use App\Http\Controllers\SubscriptionCheckoutController;
+use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\TicketScanController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
 Route::get('/', function () {
     return view('welcome');
@@ -66,4 +69,33 @@ Route::prefix('dashboard')->group(function(){
 
     Route::post('/budgets/{budget}/chat', [BudgetChatController::class, 'store'])->name('budget.chat');
     Route::post('/budgets/{budget}/scan-ticket', [TicketScanController::class, 'store'])->name('budgets.scan-ticket');
+});
+
+Route::middleware(['auth', 'verified'])->group(function(){
+
+    Route::post('/subscription-checkout/{plan}', [SubscriptionCheckoutController::class, 'store'])
+    ->name('subscription.checkout')
+    ->whereIn('plan', ['monthly', 'yearly']);
+
+
+    Route::view('/billing/success', 'billing.success')->name('billing.success');
+    Route::view('/billing/cancel', 'billing.cancel')->name('billing.cancel');
+
+    Route::get('/plans', function(){
+        return Inertia::render('Pro/Plans');
+    })->name('plans');
+
+     Route::get('/subscription', [SubscriptionController::class, 'show'])
+        ->name('subscription.manage');
+
+    Route::post('/subscription/swap/{plan}', [SubscriptionController::class, 'swap'])
+        ->name('subscription.swap')
+        ->whereIn('plan', ['monthly', 'yearly']);
+
+    Route::post('/subscription/cancel', [SubscriptionController::class, 'cancel'])
+        ->name('subscription.cancel');
+
+    Route::post('/subscription/resume', [SubscriptionController::class, 'resume'])
+        ->name('subscription.resume');
+
 });
