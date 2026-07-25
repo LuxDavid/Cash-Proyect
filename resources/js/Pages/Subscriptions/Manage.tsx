@@ -5,6 +5,7 @@ import SubscriptionDowngrade from '../../../components/subscriptions/Subscriptio
 import SubscriptionUpgrade from '../../../components/subscriptions/SubscriptionUpgrade';
 import { toast,ToastContainer } from 'react-toastify';
 import { useEffect } from "react";
+import SubscriptionCancellation from '../../../components/subscriptions/SubscriptionCancellation';
 
 
 type Props = {
@@ -64,6 +65,10 @@ export default function Manage({subscription}: Props){
                             next_billing_date={subscription.next_billing_date}
                             ends_at={subscription.ends_at}
                             />}
+
+                            <SubscriptionCancellation
+                                next_billing_date={subscription.next_billing_date} 
+                            />
                         </>
                     )
                 }
