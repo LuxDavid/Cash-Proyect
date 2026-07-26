@@ -1,12 +1,10 @@
-import { Head, usePage } from "@inertiajs/react";
 import SubscriptionStatus from '../../../components/subscriptions/SubscriptionStatus';
 import { Subscription } from "../../../types/subscription";
 import SubscriptionDowngrade from '../../../components/subscriptions/SubscriptionDowngrade';
 import SubscriptionUpgrade from '../../../components/subscriptions/SubscriptionUpgrade';
-import { toast,ToastContainer } from 'react-toastify';
-import { useEffect } from "react";
 import SubscriptionCancellation from '../../../components/subscriptions/SubscriptionCancellation';
 import SubscriptionResume from '../../../components/subscriptions/SubscriptionResume';
+import AppLayout from "@/Layouts/AppLayout";
 
 type Props = {
     subscription: Subscription
@@ -22,28 +20,14 @@ const statusColors = {
 
 export default function Manage({subscription}: Props){
 
-    const {flash} = usePage().props;
-
-    console.log(subscription);
-    
+    // console.log(subscription);
 
     const title= 'Administra tu suscripción';
     const isYearly = subscription.plan === 'yearly';
 
-    useEffect(() => {
-        if(flash.success){
-            toast.success(flash.success);
-        }
-
-        if(flash.error){
-            toast.success(flash.error);
-        }
-        
-    }, [flash]);
-    
     return (
-        <>
-            <Head title={title}/>
+        <AppLayout title={title}>
+            
 
             <main className="max-w-3xl mx-auto py-12 px-4">
                 <h1 className="text-3xl font-black mb-2">{title}</h1>
@@ -77,7 +61,6 @@ export default function Manage({subscription}: Props){
                 }
             </main>
 
-            <ToastContainer/>
-        </>
+        </AppLayout>
     )
 }

@@ -9,7 +9,6 @@ declare module '@inertiajs/core' {
         },
         user:{
             user:{
-                id:number
                 name: string
                 email:string
             },

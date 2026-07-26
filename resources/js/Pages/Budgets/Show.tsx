@@ -1,10 +1,9 @@
 import { Budget } from '../../../types/budget';
-import { Head, usePage } from '@inertiajs/react';
+import { usePage } from '@inertiajs/react';
 import AmountDisplay from '../../../components/AmountDisplay';
 import ExpenseModal from '../../../components/ExpenseModal';
 import { useExpenseModalStore } from '@/stores/expense-modal-store';
 import { Category } from '../../../types/category';
-import { toast, ToastContainer } from 'react-toastify';
 import { useEffect, useState } from 'react';
 import { formatDate } from '@/utils';
 import ProgressBar from '../../../components/ProgressBar';
@@ -12,6 +11,7 @@ import ExpenseDropdown from '../../../components/ExpenseDropdown';
 import DeleteExpenseModal from '../../../components/DeleteExpenseModal';
 import CashTrackrAgent from '../../../components/CashTrackrAgent';
 import PricingTable from '../../../components/PricingTable';
+import AppLayout from '@/Layouts/AppLayout';
 
 type Props = {
   budget: Budget
@@ -21,17 +21,10 @@ type Props = {
 
 export default function Show({ budget, categories, spent }: Props) {
 
-  const { flash, user } = usePage().props;
+  const { user } = usePage().props;
 
-  console.log(user);
+  // console.log(user);
   
-
-  useEffect(() => {
-    if (flash.success) {
-      toast.success(flash.success);
-    }
-  }, [flash]);
-
   const openCreateModel = useExpenseModalStore((state) => state.openCreateModal);
 
   const remaining = +budget.amount - +spent
@@ -53,8 +46,8 @@ export default function Show({ budget, categories, spent }: Props) {
   }, [budget, categories]);
 
   return (
-    <>
-      <Head title={`Presupuesto de ${budget.name}`} />
+    <AppLayout title={`Presupuesto: ${budget.name}`}>
+      
       <section className="sm:flex sm:items-center mt-10">
         <div className="sm:flex-auto">
           <h1 className="font-bold text-4xl">Presupuesto: {budget.name}</h1>
@@ -149,7 +142,6 @@ export default function Show({ budget, categories, spent }: Props) {
 
       <ExpenseModal />
       <DeleteExpenseModal/>
-      <ToastContainer />
-    </>
+    </AppLayout>
   )
 }
