@@ -6,7 +6,7 @@ import SubscriptionUpgrade from '../../../components/subscriptions/SubscriptionU
 import { toast,ToastContainer } from 'react-toastify';
 import { useEffect } from "react";
 import SubscriptionCancellation from '../../../components/subscriptions/SubscriptionCancellation';
-
+import SubscriptionResume from '../../../components/subscriptions/SubscriptionResume';
 
 type Props = {
     subscription: Subscription
@@ -23,6 +23,9 @@ const statusColors = {
 export default function Manage({subscription}: Props){
 
     const {flash} = usePage().props;
+
+    console.log(subscription);
+    
 
     const title= 'Administra tu suscripción';
     const isYearly = subscription.plan === 'yearly';
@@ -57,7 +60,7 @@ export default function Manage({subscription}: Props){
 
                 {
                     subscription.on_grace_period ? (
-                        <p>Suscripcion Cancelada...</p>
+                        <SubscriptionResume ends_at={subscription.ends_at}/>
                     ) : (
                         <>
                             {!isYearly && <SubscriptionUpgrade/>}

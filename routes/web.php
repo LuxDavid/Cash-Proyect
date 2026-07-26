@@ -66,7 +66,9 @@ Route::prefix('dashboard')->group(function(){
     Route::post('/budgets/{budget}/expenses', [ExpenseController::class, 'store'])->name('expenses.store');
     Route::put('/budgets/{budget}/expenses/{expense}', [ExpenseController::class, 'update'])->name('expenses.update');
     Route::delete('/budgets/{budget}/expenses/{expense}', [ExpenseController::class, 'destroy'])->name('expenses.destroy');
+});
 
+Route::middleware(['auth', 'verified', 'subscribed'])->group(function(){
     Route::post('/budgets/{budget}/chat', [BudgetChatController::class, 'store'])->name('budget.chat');
     Route::post('/budgets/{budget}/scan-ticket', [TicketScanController::class, 'store'])->name('budgets.scan-ticket');
 });
@@ -98,4 +100,7 @@ Route::middleware(['auth', 'verified'])->group(function(){
     Route::post('/subscription/resume', [SubscriptionController::class, 'resume'])
         ->name('subscription.resume');
 
+    Route::get('/billing', function(Request $request){
+        return $request->user()->redirectToBillingPortal(route('dashboard'));
+    });
 });
