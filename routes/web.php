@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\BudgetChatController;
 use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\ExpenseController;
@@ -18,12 +20,20 @@ use Inertia\Inertia;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('home');
 
 //--------------------------------------------------------------------------------
 
 Route::get('/auth/register', [RegisterController::class, 'index'] )->name('register');
 Route::post('/auth/register', [RegisterController::class, 'store'] )->name('register.store');
+
+//--------------------------------------------------------------------------------
+
+Route::get('/auth/forgot-password', [ForgotPasswordController::class, 'index'])->name('password.request');
+Route::post('/auth/forgot-password', [ForgotPasswordController::class, 'store'])->name('password.email');
+
+Route::get('/auth/reset-password/{token}', [ResetPasswordController::class, 'index'])->name('password.reset');
+Route::post('/auth/reset-password', [ResetPasswordController::class, 'store'])->name('password.update');
 
 //--------------------------------------------------------------------------------
 

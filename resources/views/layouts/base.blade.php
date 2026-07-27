@@ -29,7 +29,9 @@
         <div class="max-w-6xl mx-auto flex flex-col lg:flex-row items-center lg:justify-between">
 
             <div class="w-full max-w-100">
+                <a href="{{ route('home') }}">
                     <img src="{{ asset('img/logo.svg') }}" title="CashTrack logo" alt="CashTrack logo" class="w-fullblock"/>
+                </a>
             </div>
 
             <nav class="flex flex-col lg:flex-row items-center gap-4">
