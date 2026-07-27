@@ -9,6 +9,8 @@ use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\SubscriptionCheckoutController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\TicketScanController;
+use App\Http\Controllers\UpdatePasswordController;
+use App\Http\Controllers\UpdateProfileController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -66,6 +68,11 @@ Route::prefix('dashboard')->group(function(){
     Route::post('/budgets/{budget}/expenses', [ExpenseController::class, 'store'])->name('expenses.store');
     Route::put('/budgets/{budget}/expenses/{expense}', [ExpenseController::class, 'update'])->name('expenses.update');
     Route::delete('/budgets/{budget}/expenses/{expense}', [ExpenseController::class, 'destroy'])->name('expenses.destroy');
+
+    Route::get('/settings/profile', [UpdateProfileController::class, 'edit'])->name('settings.profile');
+    Route::put('/settings/profile', [UpdateProfileController::class, 'update'])->name('settings.profile.update');
+    Route::get('/settings/password', [UpdatePasswordController::class, 'edit'])->name('settings.password');
+    Route::put('/settings/password', [UpdatePasswordController::class, 'update'])->name('settings.password.update');
 });
 
 Route::middleware(['auth', 'verified', 'subscribed'])->group(function(){
